@@ -10,6 +10,8 @@ export default function Login () {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [token, setToken] = useState('');
+  const [validateLogin, setValidateLogin] = useState(true);
+  const [validateCadaster, setValidateCadaster] = useState(true);
   const history = useNavigate();
 
   const makeOptions = (method, body) => {
@@ -43,8 +45,11 @@ export default function Login () {
     setToken(data);
     setEmail('');
     setPassword('');
-    console.log(token);
-    history('/');
+    if (data.token) return history('/');
+    setValidateLogin(false);
+    setTimeout(() => {
+      setValidateLogin(true);
+    }, 2000);
   }
 
   const cadaster = async (e) => {
@@ -55,6 +60,11 @@ export default function Login () {
     setEmail('');
     setPassword('');
     setName('');
+    if (data.token) history('/');
+    setValidateCadaster(false);
+    setTimeout(() => {
+      setValidateCadaster(true);
+    }, 2000);
     console.log(data);
   }
 
@@ -67,6 +77,7 @@ export default function Login () {
           <input value={ email } name='email' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Email' type='email' />
           <input value={ password } name='password' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Password' type='password' />
           <input className='button-login' type='submit' />
+          { !validateLogin && <p style={ { color: '#ff0000' } }>Email ou senha incorretos.</p> }
         </form>
       </div>
 
@@ -77,6 +88,7 @@ export default function Login () {
           <input value={ email } name='email' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Email' type='email' />
           <input value={ password } name='password' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Password' type='password' />
           <input className='button-login' type='submit' />
+          { !validateCadaster && <p style={ { color: '#ff0000' } }>Preencha todos os campos corretamente.</p> }
         </form>
       </div>
 

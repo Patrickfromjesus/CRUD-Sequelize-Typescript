@@ -58,9 +58,13 @@ const getById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { name, email, password } = req.body;
-        const response = yield userService_1.default.create({ name, email, password });
-        return res.status(201).json(response);
+        if (req.body.name && req.body.email && req.body.password) {
+            const { name, email, password } = req.body;
+            const response = yield userService_1.default.create({ name, email, password });
+            const token = makeToken({ id: response.id });
+            return res.status(201).json({ token });
+        }
+        return res.status(400).json({ message: 'Invalid fields!' });
     }
     catch (error) {
         return res.status(500).json({ message: error });
