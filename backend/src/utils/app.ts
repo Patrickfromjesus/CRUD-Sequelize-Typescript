@@ -7,6 +7,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/users', userController.getAll);
+app.post('/login', userController.getByEmail);
 app.get('/users/:id', userController.getById);
 app.post('/users', userController.create);
 app.put('/users/:id', userController.update);

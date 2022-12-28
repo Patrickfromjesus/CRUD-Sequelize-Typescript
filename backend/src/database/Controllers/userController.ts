@@ -1,5 +1,18 @@
 import { Request, Response } from 'express';
+import 'dotenv/config';
 import userService from '../Services/userService';
+import jwt from 'jsonwebtoken';
+
+type Payload = {
+  id: number;
+};
+
+const SECRET = process.env.JWT_SECRET || 'secret';
+
+const makeToken = (payload: Payload) => {
+  const token = jwt.sign(payload, SECRET, { expiresIn: '5h' });
+  return token
+}
 
 const getAll = async (req: Request, res: Response) => {
   try {
@@ -7,6 +20,20 @@ const getAll = async (req: Request, res: Response) => {
     return res.status(200).json(response);
   } catch (error) {
     return res.status(500).json({ message: error });
+  }
+};
+
+const getByEmail = async (req: Request, res: Response) => {
+  try {
+    if (req.body.email && req.body.password) {
+      const { email, password } = req.body;
+      const response = await userService.getByEmail(email, password);
+      if (!response) return res.status(404).json({ message: 'User Not Found' });
+      const token = makeToken({ id: response.id });
+      return res.status(200).json({ token });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error });
   }
 };
 
@@ -23,9 +50,13 @@ const getById = async (req: Request, res: Response) => {
 
 const create = async (req: Request, res: Response) => {
   try {
-    const { name, email, password } = req.body;
-    const response = await userService.create({ name, email, password });
-    return res.status(201).json(response);
+    if (req.body.name && req.body.email && req.body.password) {
+      const { name, email, password } = req.body;
+      const response = await userService.create({ name, email, password });
+      const token = makeToken({ id: response.id });
+      return res.status(201).json({ token });
+    }
+    return res.status(400).json({ message: 'Invalid fields!' });
   } catch (error) {
     return res.status(500).json({ message: error });
   }
@@ -60,4 +91,5 @@ export default {
   create,
   update,
   destroy,
+  getByEmail,
 };

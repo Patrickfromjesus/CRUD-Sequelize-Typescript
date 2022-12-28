@@ -1,0 +1,43 @@
+.login-cadaster {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.first-login, .second-cadaster {
+  margin-top: 5rem;
+  background-color: #ccc;
+  height: 20rem;
+  width: 40rem;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: -2px -2px 2px #555;
+}
+
+.form-login, .form-cadaster {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 3rem;
+}
+
+.input-login {
+  height: 1.7rem;
+  margin-bottom: 1rem;
+  width: 80%;
+  border: 1px solid transparent;
+  border-radius: 10px;
+}
+
+.button-login {
+  height: 2rem;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  width: 15rem;
+  cursor: pointer;
+}
+
+.button-login:hover {
+  transition: .5s;
+  background-color: #aaa;
+}

@@ -28,7 +28,12 @@ const update =  async (infos: UserInterface, id: number) => {
 const destroy = async (id: number) => {
   await UserModel.destroy({ where: { id } });
   return;
-}
+};
+
+const getByEmail = async (email: string, password: string) => {
+  const data = await UserModel.findOne({ where: { email, password } });
+  return data;
+};
 
 export default {
   getAll,
@@ -36,4 +41,5 @@ export default {
   create,
   update,
   destroy,
+  getByEmail,
 };
