@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
+import '../Styles/User.css';
 import Header from '../Components/Header';
+import makeOptions from '../hooks/makeOptions';
+
+const url = 'http://localhost:3000/users';
 
 export default function User() {
   const [users, setUsers] = useState([]);
@@ -13,15 +17,19 @@ export default function User() {
     doFetch();
   }, [users])
   
+  const handleDelete = async () => {
+  };
 
   return (
     <div>
       <Header />
+      <h1 className='title-users'>Usuários cadastrados</h1>
       {
-        users.map((e) => (<div key={ e.id }>
-          <p>{ e.email }</p>
-          <p>{ e.name }</p>
-          <p>{ e.password }</p>
+        users.map((e) => (<div className='div-users' key={ e.id }>
+          <span className='delete-users' onClick={ (e) => handleDelete(e) }>x</span>
+          <p>Email: { e.email }</p>
+          <p>Name: { e.name }</p>
+          <p>Password: { e.password }</p>
         </div>))
       }
     </div>

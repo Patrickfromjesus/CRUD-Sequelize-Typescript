@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import makeOptions from '../hooks/makeOptions';
 import '../Styles/Login.css';
 
 const urlCadaster = 'http://localhost:3000/users';
@@ -13,16 +14,6 @@ export default function Login () {
   const [validateLogin, setValidateLogin] = useState(true);
   const [validateCadaster, setValidateCadaster] = useState(true);
   const history = useNavigate();
-
-  const makeOptions = (method, body) => {
-    return {
-      method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    }
-  };
 
   const handleChange = ({ target }) => {
     const { value, name } = target;
@@ -49,7 +40,7 @@ export default function Login () {
     setValidateLogin(false);
     setTimeout(() => {
       setValidateLogin(true);
-    }, 2000);
+    }, 2500);
   }
 
   const cadaster = async (e) => {
@@ -64,7 +55,7 @@ export default function Login () {
     setValidateCadaster(false);
     setTimeout(() => {
       setValidateCadaster(true);
-    }, 2000);
+    }, 2500);
     console.log(data);
   }
 
@@ -84,9 +75,9 @@ export default function Login () {
       <div className='second-cadaster'>
         <h2>Ou Cadastre-se!</h2>
         <form className='form-cadaster' onSubmit={ (e) => cadaster(e) }>
-          <input value={ name } name='name' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Name' type='text' />
-          <input value={ email } name='email' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Email' type='email' />
-          <input value={ password } name='password' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Password' type='password' />
+          <input name='name' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Name' type='text' />
+          <input name='email' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Email' type='email' />
+          <input name='password' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Password' type='password' />
           <input className='button-login' type='submit' />
           { !validateCadaster && <p style={ { color: '#ff0000' } }>Preencha todos os campos corretamente.</p> }
         </form>

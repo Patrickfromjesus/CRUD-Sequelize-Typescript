@@ -1,0 +1,18 @@
+.div-users {
+  width: 80%;
+  margin: 0 auto;
+  margin-bottom: 2rem;
+  background-color: aqua;
+  padding: 1rem;
+}
+
+.title-users {
+  width: 80%;
+  text-align: center;
+}
+
+.delete-users {
+  color: #f00;
+  cursor: pointer;
+  text-align: end;
+}
