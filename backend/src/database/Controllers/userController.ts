@@ -30,7 +30,7 @@ const getByEmail = async (req: Request, res: Response) => {
       const response = await userService.getByEmail(email, password);
       if (!response) return res.status(404).json({ message: 'User Not Found' });
       const token = makeToken({ id: response.id });
-      return res.status(200).json({ token });
+      return res.status(200).json({ token, id: response.id });
     }
   } catch (error) {
     res.status(500).json({ message: error });
@@ -54,7 +54,7 @@ const create = async (req: Request, res: Response) => {
       const { name, email, password } = req.body;
       const response = await userService.create({ name, email, password });
       const token = makeToken({ id: response.id });
-      return res.status(201).json({ token });
+      return res.status(201).json({ token, id: response.id });
     }
     return res.status(400).json({ message: 'Invalid fields!' });
   } catch (error) {
