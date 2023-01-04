@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import makeOptions from '../hooks/makeOptions';
-import validateFields from '../hooks/validateFields';
+import { validateName, validateFields } from '../hooks/validateFields';
 import '../Styles/Login.css';
 
 const urlCadaster = 'http://localhost:3000/users';
@@ -14,6 +14,7 @@ export default function Login ({ setToken }) {
   const [validateLogin, setValidateLogin] = useState(true);
   const [validateCadaster, setValidateCadaster] = useState(true);
   const [loginDisabled, setLoginDisabled] = useState(true);
+  const [cadasterDisabled, setCadasterDisabled] = useState(true);
   const history = useNavigate();
 
   const handleChange = ({ target }) => {
@@ -21,15 +22,23 @@ export default function Login ({ setToken }) {
     switch (target.name) {
       case 'name':
         setName(value);
-        setLoginDisabled(validateFields(value, email, password));
+        setCadasterDisabled(validateName(value, email, password));
+        break;
+      case 'email-cadaster':
+        setEmail(value);
+        setCadasterDisabled(validateName(name, value, password));
+        break;
+      case 'password-cadaster':
+        setPassword(value);
+        setCadasterDisabled(validateName(name, email, value));
         break;
       case 'email':
         setEmail(value);
-        setLoginDisabled(validateFields(name, value, password));
+        setLoginDisabled(validateFields(value, password));
         break;
       default:
         setPassword(value);
-        setLoginDisabled(validateFields(name, email, value));
+        setLoginDisabled(validateFields(email, value));
     }
   };
 
@@ -69,8 +78,8 @@ export default function Login ({ setToken }) {
       <div className='first-login'>
         <h2>Fazer Login</h2>
         <form className='form-login' onSubmit={ (e) => login(e) }>
-          <input value={ email } name='email' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Email' type='email' />
-          <input value={ password } name='password' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Password' type='password' />
+          <input name='email' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Email' type='email' />
+          <input name='password' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Password' type='password' />
           <input disabled={ loginDisabled } className='button-login' type='submit' />
           { !validateLogin && <p style={ { color: '#ff0000' } }>Email ou senha incorretos.</p> }
         </form>
@@ -79,10 +88,10 @@ export default function Login ({ setToken }) {
       <div className='second-cadaster'>
         <h2>Ou Cadastre-se!</h2>
         <form className='form-cadaster' onSubmit={ (e) => cadaster(e) }>
-          <input name='name' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Name' type='text' />
-          <input name='email' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Email' type='email' />
-          <input name='password' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Password' type='password' />
-          <input disabled={ loginDisabled } className='button-login' type='submit' />
+          <input value={ name } name='name' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Name' type='text' />
+          <input name='email-cadaster' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Email' type='email' />
+          <input name='password-cadaster' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Password' type='password' />
+          <input disabled={ cadasterDisabled } className='button-login' type='submit' />
           { !validateCadaster && <p style={ { color: '#ff0000' } }>Preencha todos os campos corretamente.</p> }
         </form>
       </div>
