@@ -31,11 +31,13 @@ export default function User({ id }) {
       {
         users.map((e) => (<div className='div-users' key={ e.id }>
           {
-            id === e.id && <span className='delete-users' onClick={ (e) => handleDelete(e) }>x</span>
+            id === e.id && <span className='delete-users' onClick={ (e) => handleDelete(e) }>APAGAR</span>
           }
           <p>Email: { e.email }</p>
           <p>Name: { e.name }</p>
-          <p>Password: { e.password }</p>
+          {
+            id === e.id && <p>Password: { e.password }</p>
+          }
         </div>))
       }
     </div>

@@ -9,8 +9,10 @@ const urlLogin = 'http://localhost:3000/login';
 
 export default function Login ({ setToken }) {
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [emailCadaster, setEmailCadaster] = useState('');
+  const [passwordCadaster, setPasswordCadaster] = useState('');
+  const [emailLogin, setEmailLogin] = useState('');
+  const [passwordLogin, setPasswordLogin] = useState('');
   const [validateLogin, setValidateLogin] = useState(true);
   const [validateCadaster, setValidateCadaster] = useState(true);
   const [loginDisabled, setLoginDisabled] = useState(true);
@@ -22,33 +24,33 @@ export default function Login ({ setToken }) {
     switch (target.name) {
       case 'name':
         setName(value);
-        setCadasterDisabled(validateName(value, email, password));
+        setCadasterDisabled(validateName(value, emailCadaster, passwordCadaster));
         break;
       case 'email-cadaster':
-        setEmail(value);
-        setCadasterDisabled(validateName(name, value, password));
+        setEmailCadaster(value);
+        setCadasterDisabled(validateName(name, value, passwordCadaster));
         break;
       case 'password-cadaster':
-        setPassword(value);
-        setCadasterDisabled(validateName(name, email, value));
+        setPasswordCadaster(value);
+        setCadasterDisabled(validateName(name, emailCadaster, value));
         break;
       case 'email':
-        setEmail(value);
-        setLoginDisabled(validateFields(value, password));
+        setEmailLogin(value);
+        setLoginDisabled(validateFields(value, passwordLogin));
         break;
       default:
-        setPassword(value);
-        setLoginDisabled(validateFields(email, value));
+        setPasswordLogin(value);
+        setLoginDisabled(validateFields(emailLogin, value));
     }
   };
 
   const login = async (e) => {
     e.preventDefault();
-    const options = makeOptions('POST', { email, password });
+    const options = makeOptions('POST', { email: emailLogin, password: passwordLogin });
     const data = await fetch(urlLogin, options).then((response) => response.json());
     setToken(data);
-    setEmail('');
-    setPassword('');
+    setEmailLogin('');
+    setPasswordLogin('');
     if (data.token) return history('/users');
     setValidateLogin(false);
     setTimeout(() => {
@@ -58,11 +60,11 @@ export default function Login ({ setToken }) {
 
   const cadaster = async (e) => {
     e.preventDefault();
-    const options = makeOptions('POST', { name, email, password });
+    const options = makeOptions('POST', { name, email: emailCadaster, password: passwordCadaster });
     const data = await fetch(urlCadaster, options).then((response) => response.json());
     setToken(data);
-    setEmail('');
-    setPassword('');
+    setEmailCadaster('');
+    setPasswordCadaster('');
     setName('');
     if (data.token) history('/users');
     setValidateCadaster(false);
@@ -78,8 +80,8 @@ export default function Login ({ setToken }) {
       <div className='first-login'>
         <h2>Fazer Login</h2>
         <form className='form-login' onSubmit={ (e) => login(e) }>
-          <input name='email' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Email' type='email' />
-          <input name='password' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Password' type='password' />
+          <input value={ emailLogin } name='email' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Email' type='email' />
+          <input value={ passwordLogin } name='password' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Password' type='password' />
           <input disabled={ loginDisabled } className='button-login' type='submit' />
           { !validateLogin && <p style={ { color: '#ff0000' } }>Email ou senha incorretos.</p> }
         </form>
@@ -89,8 +91,8 @@ export default function Login ({ setToken }) {
         <h2>Ou Cadastre-se!</h2>
         <form className='form-cadaster' onSubmit={ (e) => cadaster(e) }>
           <input value={ name } name='name' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Name' type='text' />
-          <input name='email-cadaster' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Email' type='email' />
-          <input name='password-cadaster' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Password' type='password' />
+          <input value={ emailCadaster } name='email-cadaster' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Email' type='email' />
+          <input value={ passwordCadaster } name='password-cadaster' onChange={ (e) => handleChange(e) } className='input-login' placeholder='Password' type='password' />
           <input disabled={ cadasterDisabled } className='button-login' type='submit' />
           { !validateCadaster && <p style={ { color: '#ff0000' } }>Preencha todos os campos corretamente.</p> }
         </form>
