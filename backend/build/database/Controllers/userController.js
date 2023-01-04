@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv/config");
 const userService_1 = __importDefault(require("../Services/userService"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const userService = new userService_1.default();
 const SECRET = process.env.JWT_SECRET || 'secret';
 const makeToken = (payload) => {
     const token = jsonwebtoken_1.default.sign(payload, SECRET, { expiresIn: '5h' });
@@ -22,7 +23,7 @@ const makeToken = (payload) => {
 };
 const getAll = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield userService_1.default.getAll();
+        const response = yield userService.getAll();
         return res.status(200).json(response);
     }
     catch (error) {
@@ -31,14 +32,12 @@ const getAll = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const getByEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (req.body.email && req.body.password) {
-            const { email, password } = req.body;
-            const response = yield userService_1.default.getByEmail(email, password);
-            if (!response)
-                return res.status(404).json({ message: 'User Not Found' });
-            const token = makeToken({ id: response.id });
-            return res.status(200).json({ token });
-        }
+        const { email, password } = req.body;
+        const response = yield userService.getByEmail(email, password);
+        if (!response)
+            return res.status(404).json({ message: 'User Not Found' });
+        const token = makeToken({ id: response.id });
+        return res.status(200).json({ token, id: response.id });
     }
     catch (error) {
         res.status(500).json({ message: error });
@@ -47,7 +46,7 @@ const getByEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 const getById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const response = yield userService_1.default.getById(Number(id));
+        const response = yield userService.getById(Number(id));
         if (!response)
             return res.status(404).json({ message: 'Id Not Found' });
         return res.status(200).json(response);
@@ -58,13 +57,10 @@ const getById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (req.body.name && req.body.email && req.body.password) {
-            const { name, email, password } = req.body;
-            const response = yield userService_1.default.create({ name, email, password });
-            const token = makeToken({ id: response.id });
-            return res.status(201).json({ token });
-        }
-        return res.status(400).json({ message: 'Invalid fields!' });
+        const { name, email, password } = req.body;
+        const response = yield userService.create({ name, email, password });
+        const token = makeToken({ id: response.id });
+        return res.status(201).json({ token, id: response.id });
     }
     catch (error) {
         return res.status(500).json({ message: error });
@@ -74,10 +70,7 @@ const update = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, email, password } = req.body;
         const { id } = req.params;
-        const checkId = yield userService_1.default.getById(Number(id));
-        if (!checkId)
-            return res.status(404).json({ message: 'Id Not Found' });
-        const response = yield userService_1.default.update({ name, email, password }, Number(id));
+        const response = yield userService.update({ name, email, password }, Number(id));
         return res.status(200).json(response);
     }
     catch (error) {
@@ -87,7 +80,7 @@ const update = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 const destroy = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        yield userService_1.default.destroy(Number(id));
+        yield userService.destroy(Number(id));
         return res.status(204).end();
     }
     catch (error) {

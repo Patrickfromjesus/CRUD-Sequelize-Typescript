@@ -40,7 +40,7 @@ export default function Login ({ setToken }) {
     setToken(data);
     setEmail('');
     setPassword('');
-    if (data.token) return history('/');
+    if (data.token) return history('/users');
     setValidateLogin(false);
     setTimeout(() => {
       setValidateLogin(true);
@@ -55,7 +55,7 @@ export default function Login ({ setToken }) {
     setEmail('');
     setPassword('');
     setName('');
-    if (data.token) history('/');
+    if (data.token) history('/users');
     setValidateCadaster(false);
     setTimeout(() => {
       setValidateCadaster(true);

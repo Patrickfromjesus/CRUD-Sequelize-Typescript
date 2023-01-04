@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import 'dotenv/config';
-import userService from '../Services/userService';
+import UserService from '../Services/userService';
 import jwt from 'jsonwebtoken';
+
+const userService = new UserService();
 
 type Payload = {
   id: number;
@@ -25,13 +27,11 @@ const getAll = async (req: Request, res: Response) => {
 
 const getByEmail = async (req: Request, res: Response) => {
   try {
-    if (req.body.email && req.body.password) {
-      const { email, password } = req.body;
-      const response = await userService.getByEmail(email, password);
-      if (!response) return res.status(404).json({ message: 'User Not Found' });
-      const token = makeToken({ id: response.id });
-      return res.status(200).json({ token, id: response.id });
-    }
+    const { email, password } = req.body;
+    const response = await userService.getByEmail(email, password);
+    if (!response) return res.status(404).json({ message: 'User Not Found' });
+    const token = makeToken({ id: response.id });
+    return res.status(200).json({ token, id: response.id });
   } catch (error) {
     res.status(500).json({ message: error });
   }
@@ -50,13 +50,10 @@ const getById = async (req: Request, res: Response) => {
 
 const create = async (req: Request, res: Response) => {
   try {
-    if (req.body.name && req.body.email && req.body.password) {
-      const { name, email, password } = req.body;
-      const response = await userService.create({ name, email, password });
-      const token = makeToken({ id: response.id });
-      return res.status(201).json({ token, id: response.id });
-    }
-    return res.status(400).json({ message: 'Invalid fields!' });
+    const { name, email, password } = req.body;
+    const response = await userService.create({ name, email, password });
+    const token = makeToken({ id: response.id });
+    return res.status(201).json({ token, id: response.id });
   } catch (error) {
     return res.status(500).json({ message: error });
   }
@@ -66,8 +63,6 @@ const update = async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body;
     const { id } = req.params;
-    const checkId = await userService.getById(Number(id));
-    if (!checkId) return res.status(404).json({ message: 'Id Not Found' });
     const response = await userService.update({ name, email, password }, Number(id));
     return res.status(200).json(response);
   } catch (error) {
